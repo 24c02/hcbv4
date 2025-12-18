@@ -75,19 +75,31 @@ module HCBV4
 
     # Freezes the card, blocking new transactions.
     # @return [StripeCard]
-    def freeze! = (require_client!; _client.update_stripe_card(id, status: "frozen"))
+    def freeze!
+      require_client!
+      _client.update_stripe_card(id, status: "frozen")
+    end
 
     # Unfreezes a frozen card.
     # @return [StripeCard]
-    def defrost! = (require_client!; _client.update_stripe_card(id, status: "active"))
+    def defrost!
+      require_client!
+      _client.update_stripe_card(id, status: "active")
+    end
 
     # Permanently cancels the card.
     # @return [Hash]
-    def cancel! = (require_client!; _client.cancel_stripe_card(id))
+    def cancel!
+      require_client!
+      _client.cancel_stripe_card(id)
+    end
 
     # Refreshes card data from the API.
     # @return [StripeCard]
-    def reload! = (require_client!; _client.stripe_card(id))
+    def reload!
+      require_client!
+      _client.stripe_card(id)
+    end
 
     # Activates a physical card after receiving it.
     # @param last4 [String] last 4 digits printed on the card

@@ -3,7 +3,7 @@
 module HCBV4
   module Resource
     def require_client!
-      raise Error, "No client attached to this #{self.class.name.split('::').last}" unless _client
+      raise Error, "No client attached to this #{self.class.name.split("::").last}" unless _client
     end
 
     module ClassMethods

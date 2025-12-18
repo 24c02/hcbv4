@@ -22,6 +22,9 @@ module HCBV4
 
     # Deletes this receipt.
     # @return [nil]
-    def delete! = (require_client!; _client.delete_receipt(id))
+    def delete!
+      require_client!
+      _client.delete_receipt(id)
+    end
   end
 end

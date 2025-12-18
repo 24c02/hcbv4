@@ -14,9 +14,6 @@ module HCBV4
     # @param client [Client, nil]
     # @return [CardGrant]
     def self.from_hash(hash, client: nil)
-      puts "!!!"
-      puts hash.inspect
-      puts "!!!"
       organization = hash["organization"] ? Organization.from_hash(hash["organization"]) : nil
 
       new(
@@ -44,24 +41,39 @@ module HCBV4
     # Adds funds to this grant.
     # @param amount_cents [Integer]
     # @return [CardGrant]
-    def topup!(amount_cents:) = (require_client!; _client.topup_card_grant(id, amount_cents:))
+    def topup!(amount_cents:)
+      require_client!
+      _client.topup_card_grant(id, amount_cents:)
+    end
 
     # Withdraws funds back to the organization.
     # @param amount_cents [Integer]
     # @return [CardGrant]
-    def withdraw!(amount_cents:) = (require_client!; _client.withdraw_card_grant(id, amount_cents:))
+    def withdraw!(amount_cents:)
+      require_client!
+      _client.withdraw_card_grant(id, amount_cents:)
+    end
 
     # Cancels this grant, returning remaining funds.
     # @return [CardGrant]
-    def cancel! = (require_client!; _client.cancel_card_grant(id))
+    def cancel!
+      require_client!
+      _client.cancel_card_grant(id)
+    end
 
     # Activates a pending grant.
     # @return [CardGrant]
-    def activate! = (require_client!; _client.activate_card_grant(id))
+    def activate!
+      require_client!
+      _client.activate_card_grant(id)
+    end
 
     # Refreshes grant data from the API.
     # @return [CardGrant]
-    def reload! = (require_client!; _client.card_grant(id))
+    def reload!
+      require_client!
+      _client.card_grant(id)
+    end
 
     # Updates grant attributes.
     # @return [CardGrant]

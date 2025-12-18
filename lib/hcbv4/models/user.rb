@@ -29,7 +29,8 @@ module HCBV4
   class User
     attr_reader :id, :name, :email, :avatar, :admin, :auditor, :birthday, :shipping_address, :_client
 
-    def initialize(id:, name: nil, email: nil, avatar: nil, admin: nil, auditor: nil, birthday: nil, shipping_address: nil, _client: nil)
+    def initialize(id:, name: nil, email: nil, avatar: nil, admin: nil, auditor: nil, birthday: nil,
+                   shipping_address: nil, _client: nil)
       @id = id
       @name = name
       @email = email

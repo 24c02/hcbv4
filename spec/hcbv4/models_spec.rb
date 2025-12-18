@@ -34,11 +34,11 @@ RSpec.describe "Models" do
   describe HCBV4::OrganizationUser do
     it "inherits from User and adds role" do
       org_user = described_class.from_hash({
-        "id" => "usr_123",
-        "name" => "Org Member",
-        "role" => "manager",
-        "joined_at" => "2024-01-01T00:00:00Z"
-      })
+                                             "id" => "usr_123",
+                                             "name" => "Org Member",
+                                             "role" => "manager",
+                                             "joined_at" => "2024-01-01T00:00:00Z"
+                                           })
 
       expect(org_user).to be_a(HCBV4::User)
       expect(org_user.role).to eq("manager")
@@ -49,14 +49,14 @@ RSpec.describe "Models" do
   describe HCBV4::Organization do
     it "parses from hash with users" do
       org = described_class.from_hash({
-        "id" => "evt_123",
-        "name" => "Test Org",
-        "slug" => "test-org",
-        "balance_cents" => 100_000,
-        "users" => [
-          { "id" => "usr_1", "name" => "User 1", "role" => "owner" }
-        ]
-      })
+                                        "id" => "evt_123",
+                                        "name" => "Test Org",
+                                        "slug" => "test-org",
+                                        "balance_cents" => 100_000,
+                                        "users" => [
+                                          { "id" => "usr_1", "name" => "User 1", "role" => "owner" }
+                                        ]
+                                      })
 
       expect(org.id).to eq("evt_123")
       expect(org.name).to eq("Test Org")
@@ -67,17 +67,17 @@ RSpec.describe "Models" do
   describe HCBV4::Transaction do
     it "parses transaction with card_charge" do
       tx = described_class.from_hash({
-        "id" => "txn_123",
-        "amount_cents" => -1500,
-        "memo" => "Coffee Shop",
-        "date" => "2024-01-15",
-        "pending" => false,
-        "card_charge" => {
-          "merchant" => { "name" => "Starbucks", "smart_name" => "Starbucks Coffee" },
-          "charge_method" => "contactless",
-          "spent_at" => "2024-01-15T10:30:00Z"
-        }
-      })
+                                       "id" => "txn_123",
+                                       "amount_cents" => -1500,
+                                       "memo" => "Coffee Shop",
+                                       "date" => "2024-01-15",
+                                       "pending" => false,
+                                       "card_charge" => {
+                                         "merchant" => { "name" => "Starbucks", "smart_name" => "Starbucks Coffee" },
+                                         "charge_method" => "contactless",
+                                         "spent_at" => "2024-01-15T10:30:00Z"
+                                       }
+                                     })
 
       expect(tx.type).to eq(:card_charge)
       expect(tx.card_charge).to be_a(HCBV4::CardCharge)
@@ -86,14 +86,14 @@ RSpec.describe "Models" do
 
     it "parses transaction with donation" do
       tx = described_class.from_hash({
-        "id" => "txn_456",
-        "amount_cents" => 5000,
-        "donation" => {
-          "recurring" => true,
-          "donor" => { "name" => "John Doe", "email" => "john@example.com" },
-          "message" => "Keep up the good work!"
-        }
-      })
+                                       "id" => "txn_456",
+                                       "amount_cents" => 5000,
+                                       "donation" => {
+                                         "recurring" => true,
+                                         "donor" => { "name" => "John Doe", "email" => "john@example.com" },
+                                         "message" => "Keep up the good work!"
+                                       }
+                                     })
 
       expect(tx.type).to eq(:donation)
       expect(tx.donation.recurring?).to be(true)
@@ -102,15 +102,15 @@ RSpec.describe "Models" do
 
     it "parses transaction with transfer" do
       tx = described_class.from_hash({
-        "id" => "txn_789",
-        "amount_cents" => 10_000,
-        "transfer" => {
-          "id" => "dis_123",
-          "memo" => "Grant funds",
-          "from" => { "id" => "evt_1", "name" => "Source Org" },
-          "to" => { "id" => "evt_2", "name" => "Dest Org" }
-        }
-      })
+                                       "id" => "txn_789",
+                                       "amount_cents" => 10_000,
+                                       "transfer" => {
+                                         "id" => "dis_123",
+                                         "memo" => "Grant funds",
+                                         "from" => { "id" => "evt_1", "name" => "Source Org" },
+                                         "to" => { "id" => "evt_2", "name" => "Dest Org" }
+                                       }
+                                     })
 
       expect(tx.type).to eq(:transfer)
       expect(tx.transfer.from).to be_a(HCBV4::Organization)
@@ -120,17 +120,17 @@ RSpec.describe "Models" do
   describe HCBV4::Check do
     it "parses check with all fields" do
       check = described_class.from_hash({
-        "id" => "chk_123",
-        "status" => "deposited",
-        "check_number" => "1001",
-        "recipient_name" => "John Doe",
-        "address_line1" => "123 Main St",
-        "address_city" => "Boston",
-        "address_state" => "MA",
-        "address_zip" => "02101",
-        "payment_for" => "Services rendered",
-        "sender" => { "id" => "usr_123", "name" => "Jane" }
-      })
+                                          "id" => "chk_123",
+                                          "status" => "deposited",
+                                          "check_number" => "1001",
+                                          "recipient_name" => "John Doe",
+                                          "address_line1" => "123 Main St",
+                                          "address_city" => "Boston",
+                                          "address_state" => "MA",
+                                          "address_zip" => "02101",
+                                          "payment_for" => "Services rendered",
+                                          "sender" => { "id" => "usr_123", "name" => "Jane" }
+                                        })
 
       expect(check.check_number).to eq("1001")
       expect(check.address_city).to eq("Boston")
@@ -141,12 +141,12 @@ RSpec.describe "Models" do
   describe HCBV4::CheckDeposit do
     it "parses check deposit with images" do
       deposit = described_class.from_hash({
-        "id" => "dep_123",
-        "status" => "submitted",
-        "front_url" => "https://example.com/front.jpg",
-        "back_url" => "https://example.com/back.jpg",
-        "submitter" => { "id" => "usr_123" }
-      })
+                                            "id" => "dep_123",
+                                            "status" => "submitted",
+                                            "front_url" => "https://example.com/front.jpg",
+                                            "back_url" => "https://example.com/back.jpg",
+                                            "submitter" => { "id" => "usr_123" }
+                                          })
 
       expect(deposit.front_url).to eq("https://example.com/front.jpg")
       expect(deposit.submitter).to be_a(HCBV4::User)
@@ -156,17 +156,18 @@ RSpec.describe "Models" do
   describe HCBV4::StripeCard do
     it "parses with personalization and shipping" do
       card = described_class.from_hash({
-        "id" => "card_123",
-        "type" => "physical",
-        "status" => "active",
-        "last4" => "4242",
-        "personalization" => { "color" => "black", "logo_url" => "https://example.com/logo.png" },
-        "shipping" => {
-          "status" => "delivered",
-          "eta" => "2024-01-20",
-          "address" => { "line1" => "123 Main St", "city" => "SF", "state" => "CA" }
-        }
-      })
+                                         "id" => "card_123",
+                                         "type" => "physical",
+                                         "status" => "active",
+                                         "last4" => "4242",
+                                         "personalization" => { "color" => "black",
+                                                                "logo_url" => "https://example.com/logo.png" },
+                                         "shipping" => {
+                                           "status" => "delivered",
+                                           "eta" => "2024-01-20",
+                                           "address" => { "line1" => "123 Main St", "city" => "SF", "state" => "CA" }
+                                         }
+                                       })
 
       expect(card.physical?).to be(true)
       expect(card.personalization.color).to eq("black")
@@ -184,14 +185,14 @@ RSpec.describe "Models" do
   describe HCBV4::CardGrant do
     it "parses with disbursements" do
       grant = described_class.from_hash({
-        "id" => "cg_123",
-        "amount_cents" => 10_000,
-        "balance_cents" => 5000,
-        "status" => "active",
-        "disbursements" => [
-          { "id" => "dis_1", "amount_cents" => 5000 }
-        ]
-      })
+                                          "id" => "cg_123",
+                                          "amount_cents" => 10_000,
+                                          "balance_cents" => 5000,
+                                          "status" => "active",
+                                          "disbursements" => [
+                                            { "id" => "dis_1", "amount_cents" => 5000 }
+                                          ]
+                                        })
 
       expect(grant.disbursements.first).to be_a(HCBV4::Transfer)
     end
@@ -200,14 +201,14 @@ RSpec.describe "Models" do
   describe HCBV4::DonationTransaction do
     it "parses with attribution" do
       donation = described_class.from_hash({
-        "recurring" => false,
-        "refunded" => false,
-        "donor" => { "name" => "Anonymous" },
-        "attribution" => {
-          "utm_source" => "twitter",
-          "utm_campaign" => "fundraiser"
-        }
-      })
+                                             "recurring" => false,
+                                             "refunded" => false,
+                                             "donor" => { "name" => "Anonymous" },
+                                             "attribution" => {
+                                               "utm_source" => "twitter",
+                                               "utm_campaign" => "fundraiser"
+                                             }
+                                           })
 
       expect(donation.recurring?).to be(false)
       expect(donation.attribution.utm_source).to eq("twitter")
@@ -217,11 +218,12 @@ RSpec.describe "Models" do
   describe HCBV4::InvoiceTransaction do
     it "parses with sponsor" do
       invoice = described_class.from_hash({
-        "id" => "inv_123",
-        "amount_cents" => 50_000,
-        "due_date" => "2024-02-01",
-        "sponsor" => { "id" => "sp_123", "name" => "Acme Corp", "email" => "billing@acme.com" }
-      })
+                                            "id" => "inv_123",
+                                            "amount_cents" => 50_000,
+                                            "due_date" => "2024-02-01",
+                                            "sponsor" => { "id" => "sp_123", "name" => "Acme Corp",
+                                                           "email" => "billing@acme.com" }
+                                          })
 
       expect(invoice.sponsor.name).to eq("Acme Corp")
     end
@@ -237,10 +239,10 @@ RSpec.describe "Models" do
   describe HCBV4::TransactionList do
     it "parses paginated response" do
       list = described_class.from_hash({
-        "data" => [{ "id" => "txn_1" }, { "id" => "txn_2" }],
-        "total_count" => 50,
-        "has_more" => true
-      })
+                                         "data" => [{ "id" => "txn_1" }, { "id" => "txn_2" }],
+                                         "total_count" => 50,
+                                         "has_more" => true
+                                       })
 
       expect(list.data.length).to eq(2)
       expect(list.total_count).to eq(50)
@@ -250,23 +252,23 @@ RSpec.describe "Models" do
 
     it "is Enumerable" do
       list = described_class.from_hash({
-        "data" => [{ "id" => "txn_1" }, { "id" => "txn_2" }],
-        "total_count" => 2,
-        "has_more" => false
-      })
+                                         "data" => [{ "id" => "txn_1" }, { "id" => "txn_2" }],
+                                         "total_count" => 2,
+                                         "has_more" => false
+                                       })
 
       expect(list).to be_a(Enumerable)
-      expect(list.map(&:id)).to eq(["txn_1", "txn_2"])
+      expect(list.map(&:id)).to eq(%w[txn_1 txn_2])
       expect(list.first.id).to eq("txn_1")
       expect(list.count).to eq(2)
     end
 
     it "returns nil for next_page when no more pages" do
       list = described_class.from_hash({
-        "data" => [{ "id" => "txn_1" }],
-        "total_count" => 1,
-        "has_more" => false
-      })
+                                         "data" => [{ "id" => "txn_1" }],
+                                         "total_count" => 1,
+                                         "has_more" => false
+                                       })
 
       expect(list.next_page).to be_nil
     end
@@ -286,9 +288,9 @@ RSpec.describe "Models" do
 
     it "Transaction has has_custom_memo?, missing_receipt?, lost_receipt?, pending?, declined?" do
       tx = HCBV4::Transaction.from_hash({
-        "id" => "t1", "has_custom_memo" => true, "missing_receipt" => false,
-        "lost_receipt" => true, "pending" => false, "declined" => false
-      })
+                                          "id" => "t1", "has_custom_memo" => true, "missing_receipt" => false,
+                                          "lost_receipt" => true, "pending" => false, "declined" => false
+                                        })
       expect(tx.has_custom_memo?).to be(true)
       expect(tx.missing_receipt?).to be(false)
       expect(tx.lost_receipt?).to be(true)
@@ -298,9 +300,9 @@ RSpec.describe "Models" do
 
     it "CardGrant has lock predicates" do
       grant = HCBV4::CardGrant.from_hash({
-        "id" => "cg1", "merchant_lock" => true, "category_lock" => false,
-        "keyword_lock" => true, "one_time_use" => false, "pre_authorization_required" => true
-      })
+                                           "id" => "cg1", "merchant_lock" => true, "category_lock" => false,
+                                           "keyword_lock" => true, "one_time_use" => false, "pre_authorization_required" => true
+                                         })
       expect(grant.merchant_lock?).to be(true)
       expect(grant.category_lock?).to be(false)
       expect(grant.keyword_lock?).to be(true)
@@ -310,9 +312,9 @@ RSpec.describe "Models" do
 
     it "Organization has boolean predicates" do
       org = HCBV4::Organization.from_hash({
-        "id" => "o1", "donation_page_available" => true, "playground_mode" => false,
-        "playground_mode_meeting_requested" => true, "transparent" => true
-      })
+                                            "id" => "o1", "donation_page_available" => true, "playground_mode" => false,
+                                            "playground_mode_meeting_requested" => true, "transparent" => true
+                                          })
       expect(org.donation_page_available?).to be(true)
       expect(org.playground_mode?).to be(false)
       expect(org.playground_mode_meeting_requested?).to be(true)

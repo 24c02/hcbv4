@@ -22,6 +22,9 @@ module HCBV4
 
     # Refreshes invoice data from the API.
     # @return [Invoice]
-    def reload! = (require_client!; _client.invoice(id))
+    def reload!
+      require_client!
+      _client.invoice(id)
+    end
   end
 end

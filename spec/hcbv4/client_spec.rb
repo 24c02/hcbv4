@@ -103,28 +103,32 @@ RSpec.describe HCBV4::Client do
   describe "error handling" do
     it "raises UnauthorizedError on 401" do
       stub_request(:get, "#{base_url}/user")
-        .to_return(status: 401, body: { error: "unauthorized", messages: ["Invalid token"] }.to_json, headers: { "Content-Type" => "application/json" })
+        .to_return(status: 401, body: { error: "unauthorized",
+                                        messages: ["Invalid token"] }.to_json, headers: { "Content-Type" => "application/json" })
 
       expect { client.me }.to raise_error(HCBV4::UnauthorizedError)
     end
 
     it "raises NotFoundError on 404" do
       stub_request(:get, "#{base_url}/organizations/nonexistent")
-        .to_return(status: 404, body: { error: "not_found", messages: ["Event not found"] }.to_json, headers: { "Content-Type" => "application/json" })
+        .to_return(status: 404, body: { error: "not_found",
+                                        messages: ["Event not found"] }.to_json, headers: { "Content-Type" => "application/json" })
 
       expect { client.organization("nonexistent") }.to raise_error(HCBV4::NotFoundError)
     end
 
     it "raises InvalidOperationError for invalid_operation errors" do
       stub_request(:post, "#{base_url}/card_grants/cg_123/cancel")
-        .to_return(status: 400, body: { error: "invalid_operation", messages: ["Cannot cancel"] }.to_json, headers: { "Content-Type" => "application/json" })
+        .to_return(status: 400, body: { error: "invalid_operation",
+                                        messages: ["Cannot cancel"] }.to_json, headers: { "Content-Type" => "application/json" })
 
       expect { client.cancel_card_grant("cg_123") }.to raise_error(HCBV4::InvalidOperationError)
     end
 
     it "raises RateLimitError on 429" do
       stub_request(:get, "#{base_url}/user")
-        .to_return(status: 429, body: { error: "rate_limited", messages: ["Too many requests"] }.to_json, headers: { "Content-Type" => "application/json" })
+        .to_return(status: 429, body: { error: "rate_limited",
+                                        messages: ["Too many requests"] }.to_json, headers: { "Content-Type" => "application/json" })
 
       expect { client.me }.to raise_error(HCBV4::RateLimitError)
     end

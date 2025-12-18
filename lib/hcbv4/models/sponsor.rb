@@ -25,7 +25,10 @@ module HCBV4
 
     # Refreshes sponsor data from the API.
     # @return [Sponsor]
-    def reload! = (require_client!; _client.sponsor(id))
+    def reload!
+      require_client!
+      _client.sponsor(id)
+    end
 
     # Creates an invoice for this sponsor.
     # @param due_date [String] ISO date (YYYY-MM-DD)

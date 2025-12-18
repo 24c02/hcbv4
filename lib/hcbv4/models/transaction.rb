@@ -66,14 +66,23 @@ module HCBV4
     end
 
     # @return [Array<Comment>]
-    def comments = (require_client!; _client.comments(organization_id: organization&.id, transaction_id: id))
+    def comments
+      require_client!
+      _client.comments(organization_id: organization&.id, transaction_id: id)
+    end
 
     # @return [Array<Receipt>]
-    def receipts = (require_client!; _client.receipts(transaction_id: id))
+    def receipts
+      require_client!
+      _client.receipts(transaction_id: id)
+    end
 
     # Refreshes transaction data from the API.
     # @return [Transaction]
-    def reload! = (require_client!; _client.transaction(id))
+    def reload!
+      require_client!
+      _client.transaction(id)
+    end
 
     # Updates the transaction memo.
     # @param memo [String]

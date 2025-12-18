@@ -16,7 +16,6 @@ module HCBV4
     # @param client [Client, nil] for making subsequent requests
     # @return [Organization]
     def self.from_hash(hash, client: nil)
-      balances = hash["balances"] || {}
       new(
         id: hash["id"],
         name: hash["name"],
@@ -45,22 +44,40 @@ module HCBV4
 
     # Refreshes organization data from the API.
     # @return [Organization]
-    def reload! = (require_client!; _client.organization(id))
+    def reload!
+      require_client!
+      _client.organization(id)
+    end
 
     # @return [Array<CardGrant>]
-    def card_grants(expand: []) = (require_client!; _client.organization_card_grants(id, expand:))
+    def card_grants(expand: [])
+      require_client!
+      _client.organization_card_grants(id, expand:)
+    end
 
     # @return [Array<StripeCard>]
-    def stripe_cards(expand: []) = (require_client!; _client.organization_stripe_cards(id, expand:))
+    def stripe_cards(expand: [])
+      require_client!
+      _client.organization_stripe_cards(id, expand:)
+    end
 
     # @return [Array<Invoice>]
-    def invoices = (require_client!; _client.invoices(event_id: id))
+    def invoices
+      require_client!
+      _client.invoices(event_id: id)
+    end
 
     # @return [Array<Sponsor>]
-    def sponsors = (require_client!; _client.sponsors(event_id: id))
+    def sponsors
+      require_client!
+      _client.sponsors(event_id: id)
+    end
 
     # @return [Array<User>] users following this transparent org
-    def followers = (require_client!; _client.organization_followers(id))
+    def followers
+      require_client!
+      _client.organization_followers(id)
+    end
 
     # Returns paginated transactions.
     # @return [TransactionList]
@@ -107,7 +124,8 @@ module HCBV4
     # @return [Hash]
     def create_ach_transfer(routing_number:, account_number:, recipient_name:, amount_money:, payment_for:, **opts)
       require_client!
-      _client.create_ach_transfer(event_id: id, routing_number:, account_number:, recipient_name:, amount_money:, payment_for:, **opts)
+      _client.create_ach_transfer(event_id: id, routing_number:, account_number:, recipient_name:, amount_money:,
+                                  payment_for:, **opts)
     end
 
     # Records an in-person donation.

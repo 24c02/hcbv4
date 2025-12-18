@@ -16,7 +16,8 @@ module HCBV4
       @base_url = base_url
     end
 
-    def self.from_credentials(client_id:, client_secret:, access_token:, refresh_token:, expires_at: nil, base_url: DEFAULT_BASE_URL)
+    def self.from_credentials(client_id:, client_secret:, access_token:, refresh_token:, expires_at: nil,
+                              base_url: DEFAULT_BASE_URL)
       oauth_client = OAuth2::Client.new(
         client_id,
         client_secret,
@@ -119,7 +120,9 @@ module HCBV4
     # @param expand [Array<Symbol>] fields to expand (:organization)
     # @return [TransactionList]
     def transactions(organization_id_or_slug, limit: nil, after: nil, type: nil, filters: {}, expand: [])
-      params = { limit:, after:, type:, filters:, expand: expand.join(",") }.compact.reject { |_, v| v.respond_to?(:empty?) && v.empty? }
+      params = { limit:, after:, type:, filters:, expand: expand.join(",") }.compact.reject do |_, v|
+        v.respond_to?(:empty?) && v.empty?
+      end
       pagination_context = {
         type: :organization_transactions,
         organization_id: organization_id_or_slug,
@@ -128,7 +131,8 @@ module HCBV4
         filters:,
         expand:
       }
-      TransactionList.from_hash(get("/organizations/#{organization_id_or_slug}/transactions", params), client: self, pagination_context:)
+      TransactionList.from_hash(get("/organizations/#{organization_id_or_slug}/transactions", params), client: self,
+                                                                                                       pagination_context:)
     end
 
     # Returns a transaction by id.
@@ -328,7 +332,8 @@ module HCBV4
     # @param payment_for [String] payment description/memo
     # @param options [Hash] additional options
     # @return [Hash]
-    def create_ach_transfer(event_id:, routing_number:, account_number:, recipient_name:, amount_money:, payment_for:, **options)
+    def create_ach_transfer(event_id:, routing_number:, account_number:, recipient_name:, amount_money:, payment_for:,
+                            **options)
       body = {
         ach_transfer: {
           routing_number:, account_number:, recipient_name:, amount_money:, payment_for:, **options
@@ -396,7 +401,8 @@ module HCBV4
     # @param enable_spending_controls [Boolean, nil] enable spending controls
     # @param initial_control_allowance_amount [Integer, nil] initial allowance in cents
     # @return [Invitation]
-    def create_invitation(event_id:, email:, role: nil, enable_spending_controls: nil, initial_control_allowance_amount: nil)
+    def create_invitation(event_id:, email:, role: nil, enable_spending_controls: nil,
+                          initial_control_allowance_amount: nil)
       body = { event_id:, email:, role:, enable_spending_controls:, initial_control_allowance_amount: }.compact
       Invitation.from_hash(post("/user/invitations", body), client: self)
     end
@@ -608,6 +614,5 @@ module HCBV4
         messages:
       )
     end
-
   end
 end

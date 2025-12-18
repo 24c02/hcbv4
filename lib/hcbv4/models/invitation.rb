@@ -22,15 +22,24 @@ module HCBV4
 
     # Accepts this invitation.
     # @return [Invitation]
-    def accept! = (require_client!; _client.accept_invitation(id))
+    def accept!
+      require_client!
+      _client.accept_invitation(id)
+    end
 
     # Rejects this invitation.
     # @return [Invitation]
-    def reject! = (require_client!; _client.reject_invitation(id))
+    def reject!
+      require_client!
+      _client.reject_invitation(id)
+    end
 
     # Refreshes invitation data from the API.
     # @return [Invitation]
-    def reload! = (require_client!; _client.invitation(id))
+    def reload!
+      require_client!
+      _client.invitation(id)
+    end
 
     # @return [Boolean]
     def accepted? = !!accepted
