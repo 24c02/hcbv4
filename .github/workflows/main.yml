@@ -1,29 +1,26 @@
-name: Ruby
+name: unleash the beast
 
 on:
   push:
-    branches:
-      - main
-
-  pull_request:
+    branches: [ "main" ]
 
 jobs:
-  build:
+  push:
+    name: Push gem to RubyGems.org
     runs-on: ubuntu-latest
-    name: Ruby ${{ matrix.ruby }}
-    strategy:
-      matrix:
-        ruby:
-          - '3.4.4'
+
+    permissions:
+      id-token: write # IMPORTANT: this permission is mandatory for trusted publishing
+      contents: write # IMPORTANT: this permission is required for `rake release` to push the release tag
 
     steps:
+      # Set up
       - uses: actions/checkout@v4
-        with:
-          persist-credentials: false
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
-      - name: Run the default task
-        run: bundle exec rake
+          ruby-version: 3.4.4
+
+      # Release
+      - uses: rubygems/release-gem@v1
