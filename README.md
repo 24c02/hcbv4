@@ -41,6 +41,22 @@ save_to_database(
 )
 ```
 
+### disabling automatic token refresh
+
+if you're managing token refresh yourself, you can disable automatic refresh:
+
+```ruby
+client = HCBV4::Client.from_credentials(
+  client_id: ENV["HCB_CLIENT_ID"],
+  client_secret: ENV["HCB_CLIENT_SECRET"],
+  access_token: "...",
+  refresh_token: "...",
+  auto_token_refresh: false
+)
+```
+
+the `auto_token_refresh` option defaults to `true`.
+
 ### using a pre-built token
 
 if you're managing the `OAuth2::AccessToken` lifecycle yourself:
