@@ -30,16 +30,26 @@ client = HCBV4::Client.from_credentials(
 )
 ```
 
-the client automatically refreshes expired tokens before each request. after any API call, you can grab the (possibly refreshed) tokens to persist them:
+the client automatically refreshes expired tokens before each request. to persist refreshed tokens, use the `on_token_refresh` callback:
 
 ```ruby
-token = client.oauth_token
-save_to_database(
-  access_token: token.token,
-  refresh_token: token.refresh_token,
-  expires_at: token.expires_at
+client = HCBV4::Client.from_credentials(
+  client_id: ENV["HCB_CLIENT_ID"],
+  client_secret: ENV["HCB_CLIENT_SECRET"],
+  access_token: user.hcb_access_token,
+  refresh_token: user.hcb_refresh_token,
+  expires_at: user.hcb_token_expires_at,
+  on_token_refresh: ->(token) {
+    user.update!(
+      hcb_access_token: token.token,
+      hcb_refresh_token: token.refresh_token,
+      hcb_token_expires_at: token.expires_at
+    )
+  }
 )
 ```
+
+the callback is invoked immediately after a token refresh, before the API request is made. this ensures your stored tokens are always up to date.
 
 ### disabling automatic token refresh
 
@@ -497,53 +507,6 @@ tx.update!(memo: "new memo")  # => Error: organization.id is nil
 ```
 
 ## recipes
-
-### token persistence
-
-the client automatically refreshes expired tokens. only persist when the token actually changes:
-
-```ruby
-class HCBService
-  def self.with(user, &block)
-    service = new(user)
-    block.call(service.client)
-  ensure
-    service.persist_if_refreshed!
-  end
-
-  def initialize(user)
-    @user = user
-    @original_token = user.hcb_access_token
-  end
-
-  def client
-    @client ||= HCBV4::Client.from_credentials(
-      client_id: ENV["HCB_CLIENT_ID"],
-      client_secret: ENV["HCB_CLIENT_SECRET"],
-      access_token: @user.hcb_access_token,
-      refresh_token: @user.hcb_refresh_token,
-      expires_at: @user.hcb_token_expires_at
-    )
-  end
-
-  def persist_if_refreshed!
-    return unless @client
-    token = @client.oauth_token
-    return if token.token == @original_token
-
-    @user.update!(
-      hcb_access_token: token.token,
-      hcb_refresh_token: token.refresh_token,
-      hcb_token_expires_at: token.expires_at
-    )
-  end
-end
-
-# usage:
-HCBService.with(current_user) do |client|
-  client.organizations
-end
-```
 
 ### keep your ledger pretty
 

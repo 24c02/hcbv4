@@ -9,21 +9,22 @@ module HCBV4
     DEFAULT_BASE_URL = "https://hcb.hackclub.com"
     API_PATH = "/api/v4"
 
-    attr_reader :oauth_token, :base_url, :auto_token_refresh
+    attr_reader :oauth_token, :base_url, :auto_token_refresh, :on_token_refresh
 
-    def initialize(oauth_token:, base_url: DEFAULT_BASE_URL, auto_token_refresh: true)
+    def initialize(oauth_token:, base_url: DEFAULT_BASE_URL, auto_token_refresh: true, on_token_refresh: nil)
       @oauth_token = oauth_token
       @base_url = base_url
       @auto_token_refresh = auto_token_refresh
+      @on_token_refresh = on_token_refresh
     end
 
     def self.from_credentials(client_id:, client_secret:, access_token:, refresh_token:, expires_at: nil,
-                              base_url: DEFAULT_BASE_URL, auto_token_refresh: true)
+                              base_url: DEFAULT_BASE_URL, auto_token_refresh: true, on_token_refresh: nil)
       oauth_client = OAuth2::Client.new(
         client_id,
         client_secret,
         site: base_url,
-        token_url: "/oauth/token"
+        token_url: "/api/v4/oauth/token"
       )
 
       token = OAuth2::AccessToken.new(
@@ -33,7 +34,7 @@ module HCBV4
         expires_at:
       )
 
-      new(oauth_token: token, base_url:, auto_token_refresh:)
+      new(oauth_token: token, base_url:, auto_token_refresh:, on_token_refresh:)
     end
 
     # ─────────────────────────────────────────────────────────────────────────
@@ -564,6 +565,7 @@ module HCBV4
       return unless oauth_token.expired?
 
       @oauth_token = oauth_token.refresh!
+      on_token_refresh&.call(@oauth_token)
     end
 
     def connection
